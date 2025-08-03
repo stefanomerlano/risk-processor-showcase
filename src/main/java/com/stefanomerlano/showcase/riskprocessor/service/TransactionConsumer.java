@@ -10,6 +10,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
+import com.stefanomerlano.showcase.riskprocessor.search.document.AnomalousTransactionDoc;
+import com.stefanomerlano.showcase.riskprocessor.search.repository.AnomalousTransactionSearchRepository;
 
 @Service
 public class TransactionConsumer {
@@ -17,11 +19,15 @@ public class TransactionConsumer {
     private static final Logger logger = LoggerFactory.getLogger(TransactionConsumer.class);
     private final RiskAnalysisService riskAnalysisService;
     private final AnomalousTransactionRepository repository;
+    private final AnomalousTransactionSearchRepository searchRepository;
 
     @Autowired
-    public TransactionConsumer(RiskAnalysisService riskAnalysisService, AnomalousTransactionRepository repository) {
+    public TransactionConsumer(RiskAnalysisService riskAnalysisService,
+            AnomalousTransactionRepository repository,
+            AnomalousTransactionSearchRepository searchRepository) {
         this.riskAnalysisService = riskAnalysisService;
         this.repository = repository;
+        this.searchRepository = searchRepository;
     }
 
     @KafkaListener(topics = "transactions-topic", groupId = "risk-processor-group")
@@ -51,5 +57,22 @@ public class TransactionConsumer {
 
         repository.save(entity);
         logger.info("--> Successfully saved anomalous transaction {}", entity.getTransactionId());
+
+        // Salviamo anche su Elasticsearch
+        indexAnomalousTransaction(dto, reason);
+    }
+
+    private void indexAnomalousTransaction(TransactionDto dto, String reason) {
+        AnomalousTransactionDoc doc = new AnomalousTransactionDoc();
+        doc.setTransactionId(dto.transactionId());
+        doc.setAmount(dto.amount());
+        doc.setCurrency(dto.currency());
+        doc.setTimestamp(dto.timestamp());
+        doc.setOriginator(dto.originator());
+        doc.setBeneficiary(dto.beneficiary());
+        doc.setReason(reason);
+
+        searchRepository.save(doc);
+        logger.info("--> Successfully indexed anomalous transaction {} in Elasticsearch", doc.getTransactionId());
     }
 }
