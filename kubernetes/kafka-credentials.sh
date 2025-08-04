@@ -1,0 +1,1 @@
+kubectl get secret kafka-broker-user-passwords --namespace default -o jsonpath='{.data.client-passwords}' | base64 -d | cut -d , -f 1

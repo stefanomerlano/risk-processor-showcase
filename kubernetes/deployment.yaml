@@ -18,10 +18,23 @@ spec:
           image: europe-west1-docker.pkg.dev/sm-sandbox-467916/showcase-repo/risk-processor:v1.0.0
           ports:
             - containerPort: 8080 # La porta su cui la nostra app Spring Boot è in ascolto
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "250m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
           env:
             - name: SPRING_DATASOURCE_URL
               value: "jdbc:postgresql://postgres-db-postgresql:5432/showcase_db"
             - name: SPRING_KAFKA_BOOTSTRAP_SERVERS
               value: "kafka-broker:9092"
+            - name: SPRING_KAFKA_PROPERTIES_SECURITY_PROTOCOL
+              value: "SASL_PLAINTEXT"
+            - name: SPRING_KAFKA_PROPERTIES_SASL_MECHANISM
+              value: "SCRAM-SHA-256"
+            - name: SPRING_KAFKA_PROPERTIES_SASL_JAAS_CONFIG
+              value: "org.apache.kafka.common.security.scram.ScramLoginModule required username=\"user1\" password=\"********\";"
             - name: SPRING_ELASTICSEARCH_URIS
               value: "http://elasticsearch-db:9200"
