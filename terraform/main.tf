@@ -37,11 +37,14 @@ resource "google_container_cluster" "primary_cluster" {
   network = google_compute_network.vpc_network.name
 
   # Define the pool of virtual machines (nodes) for the cluster.
-  initial_node_count = 1
+  initial_node_count = 1 # A good starting point for a small project
   node_config {
-    machine_type = "e2-medium" # A good, cost-effective machine type for this project
+    machine_type = "e2-standard-4" # A good, cost-effective machine type for this project
     oauth_scopes = [
       "https://www.googleapis.com/auth/cloud-platform"
     ]
   }
+
+  # Disable deletion protection for the cluster.
+  deletion_protection = false
 }

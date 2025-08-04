@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: risk-processor-service
+spec:
+  type: ClusterIP # Rende il servizio raggiungibile solo DALL'INTERNO del cluster
+  selector:
+    app: risk-processor # Deve corrispondere alle 'labels' del nostro Deployment
+  ports:
+    - protocol: TCP
+      port: 8080 # La porta del servizio
+      targetPort: 8080 # La porta del container a cui inoltrare il traffico

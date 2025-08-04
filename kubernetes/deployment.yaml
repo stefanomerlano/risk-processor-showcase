@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: risk-processor-deployment
+spec:
+  replicas: 1 # Iniziamo con una sola istanza della nostra applicazione
+  selector:
+    matchLabels:
+      app: risk-processor
+  template:
+    metadata:
+      labels:
+        app: risk-processor
+    spec:
+      containers:
+        - name: risk-processor-app
+          # SOSTITUISCI QUESTA RIGA con il percorso completo della tua immagine su Artifact Registry
+          image: europe-west1-docker.pkg.dev/sm-sandbox-467916/showcase-repo/risk-processor:v1.0.0
+          ports:
+            - containerPort: 8080 # La porta su cui la nostra app Spring Boot è in ascolto
+          env:
+            - name: SPRING_DATASOURCE_URL
+              value: "jdbc:postgresql://postgres-db-postgresql:5432/showcase_db"
+            - name: SPRING_KAFKA_BOOTSTRAP_SERVERS
+              value: "kafka-broker:9092"
+            - name: SPRING_ELASTICSEARCH_URIS
+              value: "http://elasticsearch-db:9200"
