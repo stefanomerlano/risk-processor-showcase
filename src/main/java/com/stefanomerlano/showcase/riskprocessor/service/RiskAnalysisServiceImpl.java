@@ -1,12 +1,12 @@
 package com.stefanomerlano.showcase.riskprocessor.service;
 
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+
 import com.stefanomerlano.showcase.riskprocessor.dto.TransactionDto;
 import com.stefanomerlano.showcase.riskprocessor.model.AnalysisResult;
 import com.stefanomerlano.showcase.riskprocessor.model.Rule;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 /**
  * This service contains the core logic for analyzing transaction risks.
@@ -16,7 +16,7 @@ public class RiskAnalysisServiceImpl implements RiskAnalysisService {
 
     private final RulesService rulesService;
 
-    @Autowired
+
     public RiskAnalysisServiceImpl(RulesService rulesService) {
         this.rulesService = rulesService;
     }

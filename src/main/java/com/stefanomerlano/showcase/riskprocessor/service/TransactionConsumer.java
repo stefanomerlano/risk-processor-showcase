@@ -1,15 +1,14 @@
 package com.stefanomerlano.showcase.riskprocessor.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.stereotype.Service;
+
 import com.stefanomerlano.showcase.riskprocessor.dto.TransactionDto;
 import com.stefanomerlano.showcase.riskprocessor.model.AnalysisResult;
 import com.stefanomerlano.showcase.riskprocessor.persistence.entity.AnomalousTransactionEntity;
 import com.stefanomerlano.showcase.riskprocessor.persistence.repository.AnomalousTransactionRepository;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.kafka.annotation.KafkaListener;
-import org.springframework.stereotype.Service;
 import com.stefanomerlano.showcase.riskprocessor.search.document.AnomalousTransactionDoc;
 import com.stefanomerlano.showcase.riskprocessor.search.repository.AnomalousTransactionSearchRepository;
 
@@ -21,7 +20,6 @@ public class TransactionConsumer {
     private final AnomalousTransactionRepository repository;
     private final AnomalousTransactionSearchRepository searchRepository;
 
-    @Autowired
     public TransactionConsumer(RiskAnalysisService riskAnalysisService,
             AnomalousTransactionRepository repository,
             AnomalousTransactionSearchRepository searchRepository) {
