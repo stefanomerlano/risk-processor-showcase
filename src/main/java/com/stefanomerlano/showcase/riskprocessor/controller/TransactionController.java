@@ -9,6 +9,10 @@ import org.springframework.web.bind.annotation.RestController;
 import com.stefanomerlano.showcase.riskprocessor.dto.TransactionDto;
 import com.stefanomerlano.showcase.riskprocessor.service.TransactionService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+
 @RestController
 @RequestMapping("/api/v1/transactions")
 public class TransactionController {
@@ -20,6 +24,11 @@ public class TransactionController {
         this.transactionService = transactionService;
     }
 
+    @Operation(summary = "Ingest a new transaction for asynchronous processing")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "202", description = "Transaction has been accepted and queued for processing."),
+        @ApiResponse(responseCode = "400", description = "Invalid input data provided.")
+    })
     @PostMapping
     public ResponseEntity<String> ingestTransaction(@RequestBody TransactionDto transaction) {
         // Delegate the processing to the service layer
