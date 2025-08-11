@@ -1,12 +1,3 @@
-graph TD
-A[Client] -- POST /api/v1/transactions --> B(Risk Processor Service)
-B -- Publishes message --> C(Kafka Topic: transactions-topic)
-C -- Message consumed --> D[Kafka Consumer]
-D -- Analyzes transaction --> E{Rules Engine}
-E -- Anomaly Detected --> F(PostgreSQL Database)
-E -- Anomaly Detected --> G(Elasticsearch Index)
-docker-compose up -d
-
 # Risk Processor Showcase
 
 This project is a comprehensive showcase of a modern, event-driven microservice application designed to process and analyze financial transactions for risk. It demonstrates a full software development lifecycle, from local development to a fully containerized application deployed on a cloud-native infrastructure managed by code.
