@@ -60,7 +60,7 @@ jobs:
       # Our integration tests require a running Docker daemon to use Testcontainers.
       # This step starts the necessary infrastructure services defined in our docker-compose file.
       - name: Start containers for testing
-        run: docker-compose up -d postgres elasticsearch
+        run: docker compose up -d postgres elasticsearch
 
       # Executes the Gradle test command.
       - name: Run tests with Gradle
