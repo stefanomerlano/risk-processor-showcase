@@ -1,0 +1,19 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: risk-processor-servicemonitor
+  # Important: Add a label that the Prometheus chart is looking for.
+  # By default, the 'kube-prometheus-stack' chart looks for the label 'release: prometheus'.
+  labels:
+    release: prometheus
+spec:
+  # The 'selector' section tells this ServiceMonitor which Service to look for.
+  # It must match exactly the label we put in our 'service.yaml'.
+  selector:
+    matchLabels:
+      app: risk-processor
+  # The 'endpoints' section describes how Prometheus should collect (scrape) the metrics.
+  endpoints:
+  - port: http-metrics # Must match the 'name' we gave to the port in service.yaml
+    path: '/actuator/prometheus' # The path of the metrics endpoint
+    interval: 15s # The collection frequency

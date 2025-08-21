@@ -1,0 +1,1 @@
+helm install postgres-db bitnami/postgresql --set auth.username=stefano --set auth.password=password --set auth.database=showcase_db

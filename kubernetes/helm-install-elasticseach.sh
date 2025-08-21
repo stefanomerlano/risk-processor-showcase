@@ -1,0 +1,1 @@
+helm install elasticsearch-db bitnami/elasticsearch

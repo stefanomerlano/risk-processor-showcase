@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: risk-processor-deployment
 spec:
-  replicas: 1 # Iniziamo con una sola istanza della nostra applicazione
+  replicas: 1
   selector:
     matchLabels:
       app: risk-processor
@@ -11,13 +11,18 @@ spec:
     metadata:
       labels:
         app: risk-processor
+      annotations:
+          prometheus.io/scrape: 'true'
+          prometheus.io/path: '/actuator/prometheus'
+          prometheus.io/port: '8080'
     spec:
       containers:
         - name: risk-processor-app
-          # SOSTITUISCI QUESTA RIGA con il percorso completo della tua immagine su Artifact Registry
+           # REPLACE THIS LINE with the full path of your image on Artifact Registry
           image: europe-west1-docker.pkg.dev/sm-sandbox-467916/showcase-repo/risk-processor:v1.0.0
+          imagePullPolicy: Always 
           ports:
-            - containerPort: 8080 # La porta su cui la nostra app Spring Boot è in ascolto
+            - containerPort: 8080
           resources:
             requests:
               memory: "256Mi"
@@ -35,6 +40,7 @@ spec:
             - name: SPRING_KAFKA_PROPERTIES_SASL_MECHANISM
               value: "SCRAM-SHA-256"
             - name: SPRING_KAFKA_PROPERTIES_SASL_JAAS_CONFIG
-              value: "org.apache.kafka.common.security.scram.ScramLoginModule required username=\"user1\" password=\"********\";"
+              # Substitute <password> with the output of kafka-credentials.sh
+              value: "org.apache.kafka.common.security.scram.ScramLoginModule required username=\"user1\" password=\"<password>\";"
             - name: SPRING_ELASTICSEARCH_URIS
               value: "http://elasticsearch-db:9200"

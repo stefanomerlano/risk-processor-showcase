@@ -2,11 +2,15 @@ apiVersion: v1
 kind: Service
 metadata:
   name: risk-processor-service
+  labels:
+    app: risk-processor
 spec:
-  type: ClusterIP # Rende il servizio raggiungibile solo DALL'INTERNO del cluster
+  type: ClusterIP # Makes the service reachable only FROM WITHIN the cluster
   selector:
-    app: risk-processor # Deve corrispondere alle 'labels' del nostro Deployment
+    app: risk-processor # Must match the 'labels' of our Deployment
   ports:
     - protocol: TCP
-      port: 8080 # La porta del servizio
-      targetPort: 8080 # La porta del container a cui inoltrare il traffico
+      port: 8080 # The service port
+      targetPort: 8080 # The container port to which traffic is forwarded
+      # Giving a name to the port is a best practice
+      name: http-metrics
